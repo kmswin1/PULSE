@@ -22,7 +22,7 @@ else:
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side  = 'left'
-ds = load_dataset("json", data_files=f"{dataset}.jsonl")["train"].train_test_split(test_size=0.01)
+ds = load_dataset({dataset})["train"].train_test_split(test_size=0.01)
 train_ds = ds["train"]
 test_ds = ds["test"]
 print (train_ds)
@@ -31,12 +31,8 @@ fsdp_config={'limit_all_gathers': True, 'forward_prefetch': True, 'backward_pref
 file_name = model_name.split("/")[-1]
 
 lr = 1e-7
-if "llama" in model_name or "mistral" in model_name:
-    seq_len = 512
-    label_smoothing=0.1
-else:
-    seq_len = 512
-    label_smoothing=0.1
+seq_len = 512
+label_smoothing=0.1
 if "mistral" in model_name:
     beta=0.05
 else:
